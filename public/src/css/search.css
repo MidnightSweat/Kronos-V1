@@ -9,7 +9,9 @@
     border-radius: 12px;
 }
 
-.search-bar.hidden { display: none }
+.search-bar.hidden { 
+    display: none 
+}
 
 .search-input {
     flex: 1;
@@ -18,4 +20,12 @@
     outline: none;
     color: #fff;
     font-size: 18px;
+}
+
+.search-input::placeholder { 
+    color:rgba(255,255,255,0.6);
+ }
+
+.search-icon { 
+    flex-shrink:0; 
 }
