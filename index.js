@@ -11,6 +11,15 @@ const server = app.listen(port, () => {
 });
 
 server.on("upgrade", (request, socket, head) => {
+  // -------------------------------------------------
+  // 🔴 THE FIX: Delete the cookie before Wisp sees it
+  // -------------------------------------------------
+  if (request.headers['cookie']) {
+      delete request.headers['cookie'];
+  }
+  // Optional: You can also delete the 'user-agent' if that causes issues, 
+  // but usually 'cookie' is the only one needed.
+
   wisp.routeRequest(request, socket, head, {
     logger: {
       info: () => {},
@@ -22,4 +31,4 @@ server.on("upgrade", (request, socket, head) => {
 
 setTimeout(() => {
     console.clear();
-}, 60 * 1000); // 60000 milliseconds = 60 seconds
+}, 60 * 1000);
