@@ -9,14 +9,51 @@
 <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
 <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-<style>@import url('https://fonts.googleapis.com/css2?family=Rationale&family=Special+Gothic+Expanded+One&display=swap');</style>
-<link rel="stylesheet" href="src/css/body.css">
-<link rel="stylesheet" href="src/css/frame.css">
-<link rel="stylesheet" href="src/css/game.css">
-<link rel="stylesheet" href="src/css/nav.css">
-<link rel="stylesheet" href="src/css/search.css">
-
-
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rationale&family=Special+Gothic+Expanded+One&display=swap');
+* { box-sizing: border-box; }
+body { margin:0; background:black; color:white; font-family:'Rationale',sans-serif; overflow:auto; min-height:100vh; }
+#root { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; transition:opacity 0.5s; }
+#homePage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 95%;
+    margin: 5% auto;
+    z-index: 10;
+}
+.main { font-family:'Special Gothic Expanded One',sans-serif; font-size:80px; text-shadow:0 0 30px rgba(255,255,255,0.2); letter-spacing:4px; color:#fff; }
+.search-bar { display:flex; align-items:center; gap:12px; width:400px; max-width:90%; background:rgba(255,255,255,0.1); padding:10px 15px; border-radius:12px; box-shadow:0 0 15px rgba(255,255,255,0.1); }
+.search-input { flex:1; border:none; outline:none; background:transparent; color:white; font-size:18px; font-family:'Rationale',sans-serif; }
+.search-input::placeholder { color:rgba(255,255,255,0.6); }
+.search-icon { flex-shrink:0; }
+.game-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:1rem; width:100%; max-width:1200px; }
+.game-item { padding:1rem; background:rgba(34,34,34,0.7); border-radius:12px; text-align:center; cursor:pointer; transition:.2s; border:1px solid #444; }
+.game-item:hover { transform:translateY(-4px); box-shadow:0 0 20px rgba(255,255,255,.4); }
+.game-item button { background:transparent; border:none; color:white; font-weight:bold; font-size:1rem; cursor:pointer; width:100%; }
+.game-modal { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:90%; height:90%; background:rgba(0,0,0,.85); backdrop-filter:blur(12px); border-radius:20px; z-index:150; display:none; flex-direction:column; }
+.modal-top { display:flex; justify-content:space-between; align-items:center; padding:1rem; background:rgba(0,0,0,.4); border-radius:20px 20px 0 0; }
+.modal-title { font-size:1.2rem; }
+.modal-btns { display:flex; gap:1rem; }
+.modal-btn { padding:.4rem 1rem; border-radius:10px; background:white; color:black; font-weight:bold; border:none; cursor:pointer; }
+#frameModal { width:100%; height:100%; border:none; border-radius:0 0 20px 20px; flex:1; }
+.loader { display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:50px; height:50px; border:5px solid #FFF; border-bottom-color:transparent; border-radius:50%; z-index:200; animation:rotation 1s linear infinite; }
+@keyframes rotation { 0% { transform:translate(-50%,-50%) rotate(0deg); } 100% { transform:translate(-50%,-50%) rotate(360deg); } }
+#icons { position:fixed; bottom:30px; left:50%; transform:translateX(-50%); display:flex; align-items:center; gap:25px; z-index:20; background:rgba(24,24,27,0.6); padding:15px 30px; border-radius:20px; backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.1); }
+#icons img { cursor:pointer; transition:all 0.2s ease; border-radius:12px; opacity:0.8; }
+#icons img:hover { transform:translateY(-5px) scale(1.1); opacity:1; filter:drop-shadow(0 0 8px rgba(255,255,255,0.5)); }
+#settingsMenu { display:none; position:fixed; bottom:100px; left:50%; transform:translateX(-50%); width:250px; background:rgba(24,24,27,0.95); backdrop-filter:blur(15px); border:1px solid #3f3f46; border-radius:15px; padding:20px; z-index:100; flex-direction:column; gap:15px; color:#d4d4d8; }
+#settingsMenu.active { display:flex; }
+.setting-item { display:flex; justify-content:space-between; align-items:center; font-size:18px; }
+.switch { position:relative; display:inline-block; width:40px; height:20px; }
+.switch input { opacity:0; width:0; height:0; }
+.slider { position:absolute; cursor:pointer; top:0; left:0; right:0; bottom:0; background-color:#3f3f46; transition:.4s; border-radius:34px; }
+.slider:before { position:absolute; content:""; height:16px; width:16px; left:2px; bottom:2px; background:white; transition:.4s; border-radius:50%; }
+input:checked + .slider { background:white; }
+input:checked + .slider:before { transform:translateX(20px); background:black; }
+</style>
 </head>
 <body>
 
@@ -67,7 +104,7 @@
 const games = [
 
   { "name": "1", "url": "game/cl1.html" },
-  { "name": "10 Bullets", "url": "game/cl10bullets.html" },
+  { "name": "10 Bullets", "url": "game/cl10bullet.html" },
   { "name": "10 Minutes Till Dawn", "url": "game/cl10minutestildawn.html" },
   { "name": "10-103 Null Kevin", "url": "game/clnullkevin.html" },
   { "name": "12 Mini Battles", "url": "game/cl12minibattles.html" },
