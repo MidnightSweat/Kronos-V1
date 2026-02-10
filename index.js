@@ -1,20 +1,30 @@
 import { server as wisp } from "@mercuryworkshop/wisp-js/server";
 import express from "express";
-import http from "http"; 
+import http from "http";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 5001;
 
-app.use(express.static("./public"));
+// Serve static files from public directory
+app.use(express.static(path.join(__dirname, "./public")));
+
+// Add a fallback route to serve index.html for any unmatched routes
+// This must come AFTER static files middleware
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, "./public/index.html"));
+});
 
 const server = http.createServer(app);
 
 server.on("upgrade", (request, socket, head) => {
-
   if (request.headers['cookie']) {
     delete request.headers['cookie'];
   }
-
   wisp.routeRequest(request, socket, head, {
     logger: {
       info: (msg) => console.log('Info:', msg), 
@@ -24,7 +34,7 @@ server.on("upgrade", (request, socket, head) => {
   });
 });
 
-// cookie cruption fix i think
+// Error handling
 process.on('uncaughtException', (err) => {
     console.error('Caught exception:', err);
 });
