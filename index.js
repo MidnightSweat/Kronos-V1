@@ -10,12 +10,28 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 5001;
 
+// Prevent browsers from caching service worker, HTML, and key JS files.
+// On Chromebooks with content filters, blocked responses get cached and
+// persist across reloads/restarts — this forces fresh fetches every time.
+app.use((req, res, next) => {
+  const p = req.path;
+  if (p.endsWith(".html") || p === "/" || p.endsWith("worker.js") || p.endsWith("math.mjs") || p.endsWith("scipt.js")) {
+    res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+    res.set("Pragma", "no-cache");
+    res.set("Expires", "0");
+  }
+  next();
+});
+
 // Serve static files from public directory
 app.use(express.static(path.join(__dirname, "./public")));
 
 // Add a fallback route to serve index.html for any unmatched routes
 // This must come AFTER static files middleware
 app.use((req, res) => {
+  res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
+  res.set("Pragma", "no-cache");
+  res.set("Expires", "0");
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
