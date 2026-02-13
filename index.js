@@ -15,7 +15,7 @@ const port = process.env.PORT || 5001;
 // persist across reloads/restarts — this forces fresh fetches every time.
 app.use((req, res, next) => {
   const p = req.path;
-  if (p.endsWith(".html") || p === "/" || p.endsWith("worker.js") || p.endsWith("math.mjs")) {
+  if (p.endsWith(".html") || p === "/" || p.endsWith("worker.js") || p.endsWith("math.mjs") || p.endsWith("scipt.js")) {
     res.set("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate");
     res.set("Pragma", "no-cache");
     res.set("Expires", "0");
