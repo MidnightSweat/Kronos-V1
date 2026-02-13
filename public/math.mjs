@@ -65,7 +65,12 @@ async function registerSW() {
 		throw new Error("Your browser doesn't support service workers.");
 	}
 
-	await navigator.serviceWorker.register(stockSW);
+	const reg = await navigator.serviceWorker.register(stockSW, { updateViaCache: "none" });
+
+	// Force the browser to check for an updated service worker every time the
+	// page loads. This ensures a stale/blocked SW cached by a content filter
+	// gets replaced with the real one as soon as the network allows it.
+	reg.update().catch(() => {});
 }
 
 if (window.self === window.top) {
